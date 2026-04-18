@@ -1,73 +1,81 @@
-# React + TypeScript + Vite
+# Market Streaming
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Dashboard frontend para visualización de precios de acciones en tiempo real, consumiendo datos vía WebSocket desde la API pública de [Finnhub.io](https://finnhub.io).
 
-Currently, two official plugins are available:
+## Propósito
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Proveer una interfaz reactiva que muestre cotizaciones de mercado actualizadas al instante (NYSE/NASDAQ), incluyendo precio actual, variación y volumen de cada símbolo seguido por el usuario.
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Capa | Tecnología |
+|------|-----------|
+| Framework | React 19 + TypeScript |
+| Build tool | Vite |
+| Estilos | Tailwind CSS v4 |
+| Charts | TradingView Lightweight Charts |
+| Routing | TanStack Router v1 |
+| Estado global | Zustand |
+| Fuente de datos | Finnhub WebSocket API |
 
-## Expanding the ESLint configuration
+## Arquitectura — Feature-Sliced Design (FSD)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+El proyecto sigue una versión simplificada de [Feature-Sliced Design](https://feature-sliced.design/), organizada en capas con dependencias unidireccionales (las capas superiores pueden importar de las inferiores, nunca al revés).
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── app/                  # Punto de entrada, providers, rutas globales
+├── features/             # Casos de uso del usuario
+│   ├── watchlist/        # Agregar/quitar símbolos a seguir
+│   └── price-chart/      # Visualización del gráfico de precio
+├── entities/
+│   └── symbol/           # Modelo de dominio: tipos, store Zustand, lógica de precio
+└── shared/
+    ├── lib/
+    │   └── finnhub-ws.ts # Cliente WebSocket singleton
+    └── ui/               # Componentes visuales reutilizables (Badge, Card…)
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Flujo de datos
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```
+Finnhub WebSocket
+      ↓
+shared/lib/finnhub-ws   (conexión y parseo de mensajes)
+      ↓
+entities/symbol/store   (Zustand — estado normalizado por símbolo)
+      ↓
+features/*              (consumen el store, disparan acciones)
+      ↓
+UI                      (re-renderiza solo los componentes afectados)
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Reglas de importación
+
+- `app` puede importar de cualquier capa.
+- `features` puede importar de `entities` y `shared`.
+- `entities` puede importar de `shared`.
+- `shared` no importa de ninguna capa superior.
+
+## Variables de entorno
+
+Copia `.env.example` a `.env.local` y completa los valores:
+
+```
+VITE_FINNHUB_API_KEY=your_api_key_here
+```
+
+Obtén tu API key gratuita en [finnhub.io/register](https://finnhub.io/register).
+
+## Desarrollo
+
+```bash
+npm install
+npm run dev
+```
+
+## Tests
+
+```bash
+npm run test
 ```
