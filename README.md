@@ -15,6 +15,7 @@ Proveer una interfaz reactiva que muestre cotizaciones de mercado actualizadas a
 | Estilos | Tailwind CSS v4 |
 | Charts | TradingView Lightweight Charts |
 | Routing | TanStack Router v1 |
+| Architecture linter | Steiger + @feature-sliced/steiger-plugin |
 | Estado global | Zustand |
 | Fuente de datos | Finnhub WebSocket API |
 
@@ -73,6 +74,16 @@ Obtén tu API key gratuita en [finnhub.io/register](https://finnhub.io/register)
 npm install
 npm run dev
 ```
+
+## Linting
+
+```bash
+npm run lint            # ESLint — calidad de código
+npm run lint:arch       # Steiger — validación de arquitectura FSD
+npm run lint:arch:watch # Steiger en modo watch durante desarrollo
+```
+
+Steiger valida que las importaciones entre capas respeten las reglas de FSD (ej: `entities` no puede importar de `features`). Se recomienda correrlo junto al servidor de desarrollo.
 
 ## Tests
 
