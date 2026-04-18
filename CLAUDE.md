@@ -55,8 +55,8 @@ Verificar con: `npm run lint:arch`
 ## Sprint Plan
 
 ### Sprint 1 — Fundación e infraestructura ← ACTUAL
-- [ ] Crear estructura de carpetas FSD
-- [ ] Configurar TanStack Router (`__root.tsx`, `index.tsx`, `$ticker.tsx`)
+- [x] Crear estructura de carpetas FSD
+- [x] Configurar TanStack Router (`__root.tsx`, `index.tsx`, `$ticker.tsx`)
 - [ ] Definir tipos de dominio en `entities/symbol`
 - [ ] Implementar cliente WebSocket en `shared/lib/finnhub-ws.ts`
 - [ ] Crear store Zustand en `entities/symbol/store.ts`
