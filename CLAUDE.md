@@ -28,15 +28,32 @@ Dashboard frontend de precios de acciones NASDAQ en tiempo real. Consume datos v
 
 ## Arquitectura — Feature-Sliced Design (FSD)
 
+Las 7 capas oficiales de FSD, de mayor a menor nivel de abstracción:
+
+| Capa | Descripción |
+|------|-------------|
+| `app` | Punto de entrada, providers, routing global, estilos globales |
+| `pages` | Páginas completas o grandes secciones de la UI |
+| `widgets` | Bloques autocontenidos de funcionalidad o UI (no usados aún) |
+| `features` | Implementaciones reutilizables de funcionalidades de producto |
+| `entities` | Entidades de negocio (tipos, stores, lógica de dominio) |
+| `shared` | Utilidades y componentes desacoplados del dominio |
+
+> `widgets` se omite por ahora; se añadirá si aparece la necesidad.
+
 ```
 src/
 ├── app/                  # Punto de entrada, providers, rutas globales
+├── pages/
+│   └── home/             # Página principal (lista de stocks)
 ├── features/
 │   ├── watchlist/        # Listar y seguir símbolos
 │   └── price-chart/      # Gráfico de precio (live + histórico)
 ├── entities/
 │   └── symbol/           # Tipos, store Zustand, lógica de precio
 └── shared/
+    ├── api/              # Funciones de acceso a la API
+    ├── config/           # Constantes de entorno y endpoints
     ├── lib/
     │   ├── finnhub-ws.ts  # Cliente WebSocket singleton
     │   └── finnhub-rest.ts # Cliente REST para histórico
@@ -45,10 +62,15 @@ src/
 
 ### Reglas de importación (no negociables)
 
-- `app` puede importar de cualquier capa
-- `features` puede importar de `entities` y `shared`
+Los módulos solo pueden importar de capas **estrictamente inferiores**:
+
+- `app` puede importar de `pages`, `features`, `entities`, `shared`
+- `pages` puede importar de `features`, `entities`, `shared`
+- `features` puede importar de `entities`, `shared`
 - `entities` puede importar de `shared`
 - `shared` no importa de ninguna capa superior
+
+Regla adicional: los slices dentro de una misma capa **no pueden importarse entre sí**.
 
 Verificar con: `npm run lint:arch`
 
@@ -57,7 +79,7 @@ Verificar con: `npm run lint:arch`
 ### Sprint 1 — Fundación e infraestructura ← ACTUAL
 - [x] Crear estructura de carpetas FSD
 - [x] Configurar TanStack Router (`__root.tsx`, `index.tsx`, `$ticker.tsx`)
-- [ ] Definir tipos de dominio en `entities/symbol`
+- [] Definir tipos de dominio en `entities/symbol`
 - [ ] Implementar cliente WebSocket en `shared/lib/finnhub-ws.ts`
 - [ ] Crear store Zustand en `entities/symbol/store.ts`
 
