@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { getStockSymbol } from '../../../shared/api/stock-symbol';
+import { getStockSymbol } from '../../../shared/api';
 import type { Stock, StockPrice, PriceTrend } from './types';
 import { TICKERS } from './tickers';
 

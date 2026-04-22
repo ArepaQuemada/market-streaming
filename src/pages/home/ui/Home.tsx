@@ -1,14 +1,10 @@
-import { useSymbolStore } from "../../../entities/symbol";
-import StockRow from "../../../shared/ui/StockRow";
+import { Watchlist } from '../../../features/watchlist'
 
-const Home = () => {
-    const { stocks } = useSymbolStore()
-    return (
-        <section>
-            <StockRow stocks={stocks} />
-        </section>
+const Home = () => (
+    <main className="p-4">
+        <h1 className="text-xl font-bold mb-4">NASDAQ Watchlist</h1>
+        <Watchlist />
+    </main>
+)
 
-    )
-}
-
-export default Home;
+export default Home

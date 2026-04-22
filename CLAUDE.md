@@ -86,9 +86,9 @@ Verificar con: `npm run lint:arch`
 ### Sprint 2 — Home: listado de stocks ← ACTUAL
 - [x] Definir lista estática de 20 símbolos NASDAQ
 - [x] Conectar WebSocket al montar la app y suscribir símbolos
-- [ ] Construir `StockRow` en `shared/ui`
-- [ ] Construir feature `watchlist`
-- [ ] Indicador visual verde/rojo por variación de precio
+- [x] Construir `StockRow` en `shared/ui`
+- [x] Construir feature `watchlist`
+- [x] Indicador visual verde/rojo por variación de precio
 
 ### Sprint 3 — Navegación y ruta de detalle
 - [ ] Configurar ruta dinámica `/$ticker` con validación de params

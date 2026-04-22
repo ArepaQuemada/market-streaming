@@ -10,4 +10,11 @@ export default defineConfig([
       'fsd/public-api': 'off',
     },
   },
+  {
+    // Las features arrancan con un único consumidor; la regla genera falsos positivos durante el desarrollo inicial
+    files: ['./src/features/**'],
+    rules: {
+      'fsd/insignificant-slice': 'off',
+    },
+  },
 ])
