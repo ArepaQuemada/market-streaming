@@ -1,8 +1,12 @@
+import { useSymbolStore } from "../../../entities/symbol";
+import StockRow from "../../../shared/ui/StockRow";
+
 const Home = () => {
+    const { stocks } = useSymbolStore()
     return (
-        <div>
-            Hello
-        </div>
+        <section>
+            <StockRow stocks={stocks} />
+        </section>
 
     )
 }

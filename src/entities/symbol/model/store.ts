@@ -31,7 +31,8 @@ export const useSymbolStore = create<SymbolState>((set, get) => ({
                 .filter(s => tickerSet.has(s.symbol))
                 .map(s => ({ ticker: s.symbol, displaySymbol: s.displaySymbol, description: s.description }));
             set({ stocks, isLoading: false });
-        } catch {
+        } catch (err) {
+            if (import.meta.env.DEV) console.error('[loadStocks]', err);
             set({ isLoading: false });
         }
     },
