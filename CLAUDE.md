@@ -76,16 +76,16 @@ Verificar con: `npm run lint:arch`
 
 ## Sprint Plan
 
-### Sprint 1 — Fundación e infraestructura ← ACTUAL
+### Sprint 1 — Fundación e infraestructura
 - [x] Crear estructura de carpetas FSD
 - [x] Configurar TanStack Router (`__root.tsx`, `index.tsx`, `$ticker.tsx`)
-- [] Definir tipos de dominio en `entities/symbol`
-- [ ] Implementar cliente WebSocket en `shared/lib/finnhub-ws.ts`
-- [ ] Crear store Zustand en `entities/symbol/store.ts`
+- [x] Definir tipos de dominio en `entities/symbol`
+- [x] Implementar cliente WebSocket en `shared/lib/finnhub-ws.ts`
+- [x] Crear store Zustand en `entities/symbol/store.ts`
 
-### Sprint 2 — Home: listado de stocks
-- [ ] Definir lista estática de 20 símbolos NASDAQ
-- [ ] Conectar WebSocket al montar la app y suscribir símbolos
+### Sprint 2 — Home: listado de stocks ← ACTUAL
+- [x] Definir lista estática de 20 símbolos NASDAQ
+- [x] Conectar WebSocket al montar la app y suscribir símbolos
 - [ ] Construir `StockRow` en `shared/ui`
 - [ ] Construir feature `watchlist`
 - [ ] Indicador visual verde/rojo por variación de precio
