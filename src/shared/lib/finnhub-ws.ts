@@ -1,38 +1,34 @@
 import { HOSTS } from "../config/hosts";
 import { KEYS } from "../config/key";
-import type { FinnhubMessage, FinnhubTrade } from "../api/finnhub.types";
 
 let socket: WebSocket | null = null;
+const pendingMessages: object[] = [];
 
 export const createFinnhubWsClient = () => {
     if (!socket || socket.readyState === WebSocket.CLOSED) {
         socket = new WebSocket(`${HOSTS.ws.finnhub}?token=${KEYS.finnhub}`);
+        socket.addEventListener('open', () => {
+            for (const msg of pendingMessages.splice(0)) {
+                socket!.send(JSON.stringify(msg));
+            }
+        });
     }
     const ws = socket;
     return {
-        subscribe(symbol: string, onMessage: (trades: FinnhubTrade[]) => void): () => void {
+        send(message: object): void {
             if (ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({ type: 'subscribe', symbol }));
+                ws.send(JSON.stringify(message));
             } else {
-                ws.addEventListener('open', () => {
-                    ws.send(JSON.stringify({ type: 'subscribe', symbol }));
-                }, { once: true });
+                pendingMessages.push(message);
             }
-            const messageHandler = (event: MessageEvent) => {
-                const msg: FinnhubMessage = JSON.parse(event.data);
-                if (msg.type !== 'trade') return;
-                const trades = msg.data.filter(trade => trade.s === symbol);
-                if (trades.length > 0) onMessage(trades);
-            };
-            ws.addEventListener('message', messageHandler);
-            return () => ws.removeEventListener('message', messageHandler);
+        },
+        onMessage(handler: (event: MessageEvent) => void): () => void {
+            ws.addEventListener('message', handler);
+            return () => ws.removeEventListener('message', handler);
         },
         close(): void {
             ws.close();
             socket = null;
         }
-    }
-}
-
-
-
+    };
+};

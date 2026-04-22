@@ -3,7 +3,7 @@ export interface FinnhubTrade {
     p: number;   // price
     t: number;   // timestamp (ms)
     v: number;   // volume
-    c: string[] | null; // trade conditions
+    c: string[] | null;
 }
 
 export interface FinnhubTradeMessage {
